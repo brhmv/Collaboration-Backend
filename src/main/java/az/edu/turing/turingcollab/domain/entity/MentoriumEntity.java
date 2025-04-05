@@ -12,18 +12,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,10 +62,6 @@ public class MentoriumEntity extends BaseEntity {
     @Column(name = "participant_limit")
     private Integer participantLimit;
 
-    @Column(name = "participants_count")
-    @Setter(AccessLevel.NONE)
-    private Integer participantsCount = 0;
-
     private String picture;
 
     @ManyToMany(cascade = {
@@ -85,12 +77,10 @@ public class MentoriumEntity extends BaseEntity {
     public void addParticipant(UserEntity user) {
         participants.add(user);
         user.getMentoriums().add(this);
-        participantsCount++;
     }
 
     public void removeParticipant(UserEntity user) {
         participants.remove(user);
         user.getMentoriums().remove(this);
-        participantsCount--;
     }
 }
