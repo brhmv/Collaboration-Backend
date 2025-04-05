@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -19,8 +20,9 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-public class BaseEntity implements Serializable {
+public abstract class BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 12342942L;
 
     @Id

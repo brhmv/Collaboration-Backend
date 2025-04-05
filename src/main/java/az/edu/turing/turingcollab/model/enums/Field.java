@@ -1,6 +1,6 @@
 package az.edu.turing.turingcollab.model.enums;
 
-public enum TuringField {
+public enum Field {
 
     UI_UX_DESIGNER,
     FRONTEND_DEVELOPER,
