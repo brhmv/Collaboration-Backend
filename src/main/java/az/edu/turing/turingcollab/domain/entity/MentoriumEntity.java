@@ -1,35 +1,96 @@
 package az.edu.turing.turingcollab.domain.entity;
 
+import az.edu.turing.turingcollab.model.enums.Field;
 import az.edu.turing.turingcollab.model.enums.LessonType;
 import az.edu.turing.turingcollab.model.enums.MentoriumStatus;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "mentorium")
 public class MentoriumEntity extends BaseEntity {
 
+    @Column(name = "mentor_fullname", nullable = false)
     private String mentorFullName;
-    private String mentorField;
+
+    @Column(name = "mentor_field", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Field mentorField;
+
+    @Column(name = "short_description")
     private String shortDescription;
+
+    @Column(nullable = false)
     private String topic;
-    private MentoriumStatus status;
-    private LocalDate startDate;
-    private LocalTime startTime;
-    private LocalTime endTime;
-    private List<UserEntity> participants;
+
+    @Enumerated(EnumType.STRING)
+    private MentoriumStatus status = MentoriumStatus.PENDING;
+
+    @Column(name = "start_time", nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(name = "end_time", nullable = false)
+    private LocalDateTime endTime;
+
     private String place;
+
+    @Column(name = "lesson_type", nullable = false)
     private LessonType lessonType;
+
+    @Column(name = "participant_limit")
     private Integer participantLimit;
+
+    @Column(name = "participants_count")
+    @Setter(AccessLevel.NONE)
+    private Integer participantsCount = 0;
+
     private String picture;
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "mentorium_users",
+            joinColumns = @JoinColumn(name = "mentorium_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @Builder.Default
+    private List<UserEntity> participants = new ArrayList<>();
+
+    public void addParticipant(UserEntity user) {
+        participants.add(user);
+        user.getMentoriums().add(this);
+        participantsCount++;
+    }
+
+    public void removeParticipant(UserEntity user) {
+        participants.remove(user);
+        user.getMentoriums().remove(this);
+        participantsCount--;
+    }
 }
