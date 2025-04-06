@@ -42,6 +42,11 @@ public class MentoriumController {
         return ResponseEntity.ok(mentoriumService.getAllMentoriums());
     }
 
+    @GetMapping("/saved")
+    public ResponseEntity<List<MentoriumCardResponse>> getSaved(@RequestHeader("User-Id") Long userId) {
+        return ResponseEntity.ok(mentoriumService.getSaved());
+    }
+
     @GetMapping("/{mentoriumId}")
     public ResponseEntity<MentoriumDetailedResponse> getById(@PathVariable Long mentoriumId) {
         return ResponseEntity.ok(mentoriumService.getMentoriumById(mentoriumId));

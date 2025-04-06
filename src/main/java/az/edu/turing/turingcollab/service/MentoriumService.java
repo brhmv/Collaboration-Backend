@@ -42,4 +42,8 @@ public class MentoriumService {
     public void delete(Long mentoriumId, Long userId) {
 
     }
+
+    public List<MentoriumCardResponse> getSaved() {
+        return null;
+    }
 }
