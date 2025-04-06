@@ -4,6 +4,7 @@ import az.edu.turing.turingcollab.model.enums.ProjectStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -18,7 +19,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -27,7 +30,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "project")
-public class ProjectEntity extends BaseEntity {
+public class    ProjectEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String name;
@@ -63,12 +66,12 @@ public class ProjectEntity extends BaseEntity {
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
-    })
+    }, fetch = FetchType.LAZY)
     @JoinTable(name = "project_users",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     @Builder.Default
-    private List<UserEntity> participants = new ArrayList<>();
+    private Set<UserEntity> participants = new HashSet<>();
 
     public void addParticipant(UserEntity user) {
         participants.add(user);

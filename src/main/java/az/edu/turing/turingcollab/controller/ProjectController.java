@@ -31,8 +31,8 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<ProjectCardResponse>> getAllProjects() {
-        return ResponseEntity.ok(projectService.getAllProjects());
+    public ResponseEntity<List<ProjectCardResponse>> getAll() {
+        return ResponseEntity.ok(projectService.getAll());
     }
 
     @GetMapping("/{projectId}")
@@ -50,6 +50,13 @@ public class ProjectController {
     public ResponseEntity<List<ProjectCardResponse>> getByParticipant(
             @RequestHeader("User-Id") Long userId) {
         return ResponseEntity.ok().body(projectService.getByParticipant(userId));
+    }
+
+    @GetMapping("/saved")
+    public ResponseEntity<List<ProjectCardResponse>> getSaved(
+            @RequestHeader("User-Id") Long userId
+    ) {
+        return ResponseEntity.ok(projectService.getSaved(userId));
     }
 
     @PostMapping

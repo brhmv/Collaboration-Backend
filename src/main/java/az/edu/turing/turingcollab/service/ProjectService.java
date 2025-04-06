@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class ProjectService {
 
-    public List<ProjectCardResponse> getAllProjects() {
+    public List<ProjectCardResponse> getAll() {
         return null;
     }
 
@@ -35,6 +35,10 @@ public class ProjectService {
     }
 
     public List<ProjectCardResponse> getByParticipant(Long userId) {
+        return null;
+    }
+
+    public List<ProjectCardResponse> getSaved(Long userId) {
         return null;
     }
 }
