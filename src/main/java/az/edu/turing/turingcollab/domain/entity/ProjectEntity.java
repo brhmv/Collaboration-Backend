@@ -17,7 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,12 +46,12 @@ public class ProjectEntity extends BaseEntity {
     private LocalDate endDate;
 
     @Column(name = "application_deadline", nullable = false)
-    private LocalDateTime applicationDeadline;
+    private LocalDate applicationDeadline;
 
     private String fields;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ApplicationEntity> applications = new ArrayList<>();
+    private List<ProjectApplicationEntity> applications = new ArrayList<>();
 
     @Column(name = "additional_link")
     private String additionalLink;
