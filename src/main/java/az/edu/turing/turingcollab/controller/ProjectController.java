@@ -40,13 +40,13 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getById(projectId));
     }
 
-    @GetMapping("/creator}")
+    @GetMapping("/creator")
     public ResponseEntity<List<ProjectCardResponse>> getByCreator(
             @RequestHeader("User-Id") Long userId) {
         return ResponseEntity.ok().body(projectService.getByCreatorId(userId));
     }
 
-    @GetMapping("/participant}")
+    @GetMapping("/participant")
     public ResponseEntity<List<ProjectCardResponse>> getByParticipant(
             @RequestHeader("User-Id") Long userId) {
         return ResponseEntity.ok().body(projectService.getByParticipant(userId));
