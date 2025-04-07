@@ -4,7 +4,9 @@ import az.edu.turing.turingcollab.model.dto.request.ProjectCreateRequest;
 import az.edu.turing.turingcollab.model.dto.request.ProjectUpdateRequest;
 import az.edu.turing.turingcollab.model.dto.response.ProjectCardResponse;
 import az.edu.turing.turingcollab.model.dto.response.ProjectDetailedResponse;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,5 +42,12 @@ public class ProjectService {
 
     public List<ProjectCardResponse> getSaved(Long userId) {
         return null;
+    }
+
+    public Resource getImage(Long id) {
+        return null;
+    }
+
+    public void uploadImage(Long id, MultipartFile file) {
     }
 }

@@ -63,7 +63,7 @@ public class MentoriumEntity extends BaseEntity {
     @Column(name = "participant_limit")
     private Integer participantLimit;
 
-    private String picture;
+    private String image;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,

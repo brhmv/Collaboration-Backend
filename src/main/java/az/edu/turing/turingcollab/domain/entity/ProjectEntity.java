@@ -59,7 +59,7 @@ public class    ProjectEntity extends BaseEntity {
     @Column(name = "additional_link")
     private String additionalLink;
 
-    private String picture;
+    private String image;
 
     private ProjectStatus status;
 

@@ -5,8 +5,10 @@ import az.edu.turing.turingcollab.model.dto.request.MentoriumUpdateRequest;
 import az.edu.turing.turingcollab.model.dto.response.MentoriumCardResponse;
 import az.edu.turing.turingcollab.model.dto.response.MentoriumDetailedResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -45,5 +47,12 @@ public class MentoriumService {
 
     public List<MentoriumCardResponse> getSaved() {
         return null;
+    }
+
+    public Resource getImage(Long id) {
+        return null;
+    }
+
+    public void uploadImage(Long id, MultipartFile file) {
     }
 }
