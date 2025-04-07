@@ -17,7 +17,7 @@ public class ProjectService {
         return null;
     }
 
-    public List<ProjectDetailedResponse> getById(Long projectId) {
+    public ProjectDetailedResponse getById(Long id) {
         return null;
     }
 

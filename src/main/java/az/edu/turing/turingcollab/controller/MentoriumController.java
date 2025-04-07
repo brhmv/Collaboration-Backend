@@ -61,9 +61,9 @@ public class MentoriumController {
         return ResponseEntity.ok(mentoriumService.getSaved());
     }
 
-    @GetMapping("/{mentoriumId}")
-    public ResponseEntity<MentoriumDetailedResponse> getById(@PathVariable Long mentoriumId) {
-        return ResponseEntity.ok(mentoriumService.getMentoriumById(mentoriumId));
+    @GetMapping("/{id}")
+    public ResponseEntity<MentoriumDetailedResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(mentoriumService.getMentoriumById(id));
     }
 
     @GetMapping("/creator")

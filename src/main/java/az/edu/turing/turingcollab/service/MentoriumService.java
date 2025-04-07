@@ -25,7 +25,7 @@ public class MentoriumService {
         return null;
     }
 
-    public MentoriumDetailedResponse getMentoriumById(Long mentoriumId) {
+    public MentoriumDetailedResponse getMentoriumById(Long id) {
         return null;
     }
 

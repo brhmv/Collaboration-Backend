@@ -19,7 +19,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/mentoriums/applications")
+@RequestMapping("/api/v1/mentoriums/applications")
 public class MentoriumAppController {
 
     private final MentoriumAppService mentoriumAppService;

@@ -39,9 +39,9 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getAll());
     }
 
-    @GetMapping("/{projectId}")
-    public ResponseEntity<List<ProjectDetailedResponse>> getById(@PathVariable Long projectId) {
-        return ResponseEntity.ok(projectService.getById(projectId));
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectDetailedResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(projectService.getById(id));
     }
 
     @GetMapping("/creator")
