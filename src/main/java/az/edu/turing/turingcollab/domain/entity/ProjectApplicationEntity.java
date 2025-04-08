@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "project_application")
 public class ProjectApplicationEntity extends BaseEntity {
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
     private ProjectEntity project;
