@@ -4,6 +4,7 @@ import az.edu.turing.turingcollab.model.enums.ProjectStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -17,9 +18,10 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -47,29 +49,29 @@ public class ProjectEntity extends BaseEntity {
     private LocalDate endDate;
 
     @Column(name = "application_deadline", nullable = false)
-    private LocalDateTime applicationDeadline;
+    private LocalDate applicationDeadline;
 
     private String fields;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ApplicationEntity> applications = new ArrayList<>();
+    private List<ProjectApplicationEntity> applications = new ArrayList<>();
 
     @Column(name = "additional_link")
     private String additionalLink;
 
-    private String picture;
+    private String image;
 
     private ProjectStatus status;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
-    })
+    }, fetch = FetchType.LAZY)
     @JoinTable(name = "project_users",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     @Builder.Default
-    private List<UserEntity> participants = new ArrayList<>();
+    private Set<UserEntity> participants = new HashSet<>();
 
     public void addParticipant(UserEntity user) {
         participants.add(user);

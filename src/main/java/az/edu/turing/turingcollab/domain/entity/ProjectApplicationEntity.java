@@ -1,7 +1,6 @@
 package az.edu.turing.turingcollab.domain.entity;
 
 import az.edu.turing.turingcollab.model.enums.ApplicationStatus;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -19,9 +18,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "application")
-public class ApplicationEntity extends BaseEntity {
-
+@Table(name = "project_application")
+public class ProjectApplicationEntity extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)

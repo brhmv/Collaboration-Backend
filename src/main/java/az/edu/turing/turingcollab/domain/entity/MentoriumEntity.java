@@ -8,6 +8,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -20,8 +21,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -62,17 +63,17 @@ public class MentoriumEntity extends BaseEntity {
     @Column(name = "participant_limit")
     private Integer participantLimit;
 
-    private String picture;
+    private String image;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
-    })
+    }, fetch = FetchType.LAZY)
     @JoinTable(name = "mentorium_users",
             joinColumns = @JoinColumn(name = "mentorium_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     @Builder.Default
-    private List<UserEntity> participants = new ArrayList<>();
+    private Set<UserEntity> participants = new HashSet<>();
 
     public void addParticipant(UserEntity user) {
         participants.add(user);
