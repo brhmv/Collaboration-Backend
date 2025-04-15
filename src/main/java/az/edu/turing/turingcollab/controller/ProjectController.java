@@ -1,27 +1,23 @@
 package az.edu.turing.turingcollab.controller;
 
 import az.edu.turing.turingcollab.model.dto.request.ProjectCreateRequest;
-import az.edu.turing.turingcollab.model.dto.request.ProjectUpdateRequest;
 import az.edu.turing.turingcollab.model.dto.response.ProjectCardResponse;
 import az.edu.turing.turingcollab.model.dto.response.ProjectDetailedResponse;
 import az.edu.turing.turingcollab.service.ProjectService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -46,50 +42,21 @@ public class ProjectController {
     @GetMapping("/creator")
     public ResponseEntity<List<ProjectCardResponse>> getByCreator(
             @RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(projectService.getByCreatorId(userId));
+        return ResponseEntity.ok().body(projectService.getAllByCreatorId(userId));
     }
 
-    @GetMapping("/participant")
-    public ResponseEntity<List<ProjectCardResponse>> getByParticipant(
-            @RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(projectService.getByParticipant(userId));
-    }
-
-    @GetMapping("/saved")
-    public ResponseEntity<List<ProjectCardResponse>> getSaved(
-            @RequestHeader("User-Id") Long userId
-    ) {
-        return ResponseEntity.ok(projectService.getSaved(userId));
-    }
-
-    @GetMapping("/images/{id}")
-    public ResponseEntity<Resource> getImage(
-            @PathVariable Long id) {
-        return ResponseEntity.ok(projectService.getImage(id));
-    }
-
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Long> create(
             @RequestHeader("User-Id") Long userId,
-            @RequestBody @Valid ProjectCreateRequest request) {
+            @ModelAttribute ProjectCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.create(userId, request));
-    }
-
-    @PostMapping("/images/{id}")
-    public ResponseEntity<Void> uploadImage(
-            @PathVariable Long id,
-            @RequestParam("file") MultipartFile file
-
-    ) {
-        projectService.uploadImage(id, file);
-        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{projectId}")
     public ResponseEntity<Long> updateById(
             @RequestHeader("User-Id") Long userId,
             @PathVariable Long projectId,
-            @RequestBody @Valid ProjectUpdateRequest request
+            @ModelAttribute ProjectCreateRequest request
     ) {
         return ResponseEntity.ok(projectService.updateById(userId, projectId, request));
     }

@@ -46,6 +46,7 @@ public class MentoriumEntity extends BaseEntity {
     @Column(nullable = false)
     private String topic;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private MentoriumStatus status = MentoriumStatus.PENDING;
 

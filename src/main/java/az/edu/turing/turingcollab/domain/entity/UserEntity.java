@@ -28,7 +28,7 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"projects", "mentoriums", "savedProjects", "savedMentoriums"})
 @Table(name = "users")
 public class UserEntity extends BaseEntity {
 
@@ -42,13 +42,15 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Field field;
 
-    @Column(name = "profile_picture")
-    private String profilePicture;
+    @Column(name = "image_name")
+    private String imageName;
 
     @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<ProjectEntity> projects = new HashSet<>();
 
     @ManyToMany(mappedBy = "participants", fetch = FetchType.LAZY)
+    @Builder.Default
     private Set<MentoriumEntity> mentoriums = new HashSet<>();
 
     @ManyToMany(cascade = {
