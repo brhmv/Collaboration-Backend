@@ -1,15 +1,19 @@
 package az.edu.turing.turingcollab.service;
 
+import az.edu.turing.turingcollab.domain.entity.MentoriumEntity;
+import az.edu.turing.turingcollab.domain.repository.MentoriumRepository;
+import az.edu.turing.turingcollab.exception.MentoriumAlreadyExistsException;
+import az.edu.turing.turingcollab.exception.MentoriumNotFoundException;
+import az.edu.turing.turingcollab.mapper.MentoriumMapper;
 import az.edu.turing.turingcollab.model.dto.request.MentoriumCreateRequest;
 import az.edu.turing.turingcollab.model.dto.request.MentoriumUpdateRequest;
 import az.edu.turing.turingcollab.model.dto.response.MentoriumCardResponse;
-import az.edu.turing.turingcollab.model.dto.response.MentoriumDetailedResponse;
+import az.edu.turing.turingcollab.model.enums.MentoriumStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -17,42 +21,58 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class MentoriumService {
 
+    private final MentoriumRepository mentoriumRepository;
+    private final MentoriumMapper mentoriumMapper;
+
+    @Transactional
     public Long create(Long userId, MentoriumCreateRequest request) {
-        return null;
+        if (mentoriumRepository.existsById(userId)) {
+            throw new MentoriumAlreadyExistsException(userId);
+        }
+
+        MentoriumEntity mentorium = mentoriumMapper.toEntity(userId, request);
+        MentoriumEntity savedMentorium = mentoriumRepository.save(mentorium);
+
+        return savedMentorium.getId();
     }
 
     public List<MentoriumCardResponse> getAllMentoriums() {
-        return null;
+        List<MentoriumEntity> mentoriums = mentoriumRepository.
+                getAllByStatusIsAndApplicationDeadlineAfter(MentoriumStatus.ACCEPTED, LocalDate.now());
+
+        return mentoriumMapper.toCardResponseList(mentoriums);
     }
 
-    public MentoriumDetailedResponse getMentoriumById(Long id) {
-        return null;
+    public MentoriumCardResponse getMentoriumById(Long id) {
+        return mentoriumMapper.toCardResponse(mentoriumRepository.findById(id).orElseThrow(() ->
+                new MentoriumNotFoundException(id)));
     }
 
     public List<MentoriumCardResponse> getByCreator(Long userId) {
-        return null;
+        return mentoriumMapper.toCardResponseList(mentoriumRepository.findAllByCreatedBy(userId));
     }
 
-    public List<MentoriumCardResponse> getByParticipant(Long userId) {
-        return null;
-    }
-
+    @Transactional
     public Long update(Long userId, Long mentoriumId, MentoriumUpdateRequest request) {
-        return null;
+        MentoriumEntity mentorium = mentoriumRepository.findById(mentoriumId).orElseThrow(() ->
+                new MentoriumNotFoundException(mentoriumId));
+
+        mentoriumMapper.updateEntity(mentorium, userId, request);
+        MentoriumEntity savedMentorium = mentoriumRepository.save(mentorium);
+
+        return savedMentorium.getId();
     }
 
+    @Transactional
     public void delete(Long mentoriumId, Long userId) {
-
+        MentoriumEntity mentorium = mentoriumRepository.findById(mentoriumId).orElseThrow(() ->
+                new MentoriumNotFoundException(mentoriumId));
+        mentoriumRepository.delete(mentorium);
     }
 
-    public List<MentoriumCardResponse> getSaved() {
-        return null;
-    }
+    public List<MentoriumCardResponse> getSaved(Long userId) {
+        List<MentoriumEntity> savedMentoriums = mentoriumRepository.findSavedMentoriumsByUserId(userId);
 
-    public Resource getImage(Long id) {
-        return null;
-    }
-
-    public void uploadImage(Long id, MultipartFile file) {
+        return mentoriumMapper.toCardResponseList(savedMentoriums);
     }
 }

@@ -3,11 +3,9 @@ package az.edu.turing.turingcollab.controller;
 import az.edu.turing.turingcollab.model.dto.request.MentoriumCreateRequest;
 import az.edu.turing.turingcollab.model.dto.request.MentoriumUpdateRequest;
 import az.edu.turing.turingcollab.model.dto.response.MentoriumCardResponse;
-import az.edu.turing.turingcollab.model.dto.response.MentoriumDetailedResponse;
 import az.edu.turing.turingcollab.service.MentoriumService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,9 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -40,16 +36,6 @@ public class MentoriumController {
         return ResponseEntity.status(HttpStatus.CREATED).body(mentoriumService.create(userId, request));
     }
 
-    @PostMapping("/images/{id}")
-    public ResponseEntity<Void> uploadImage(
-            @PathVariable Long id,
-            @RequestParam("file") MultipartFile file
-
-    ) {
-        mentoriumService.uploadImage(id, file);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping
     public ResponseEntity<List<MentoriumCardResponse>> getAll() {
         return ResponseEntity.ok(mentoriumService.getAllMentoriums());
@@ -57,28 +43,17 @@ public class MentoriumController {
 
     @GetMapping("/saved")
     public ResponseEntity<List<MentoriumCardResponse>> getSaved(@RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok(mentoriumService.getSaved());
+        return ResponseEntity.ok(mentoriumService.getSaved(userId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MentoriumDetailedResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<MentoriumCardResponse> getById(@PathVariable Long id) {
         return ResponseEntity.ok(mentoriumService.getMentoriumById(id));
     }
 
     @GetMapping("/creator")
     public ResponseEntity<List<MentoriumCardResponse>> getByCreator(@RequestHeader("User-Id") Long userId) {
         return ResponseEntity.ok().body(mentoriumService.getByCreator(userId));
-    }
-
-    @GetMapping("/participant")
-    public ResponseEntity<List<MentoriumCardResponse>> getByParticipant(@RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(mentoriumService.getByParticipant(userId));
-    }
-
-    @GetMapping("/images/{id}")
-    public ResponseEntity<Resource> getImage(
-            @PathVariable Long id) {
-        return ResponseEntity.ok(mentoriumService.getImage(id));
     }
 
     @PutMapping("/{mentoriumId}")

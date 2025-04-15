@@ -20,6 +20,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -56,6 +57,9 @@ public class MentoriumEntity extends BaseEntity {
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
+    @Column(name = "application_deadline", nullable = false)
+    private LocalDate applicationDeadline;
+
     private String place;
 
     @Column(name = "lesson_type", nullable = false)
@@ -64,7 +68,8 @@ public class MentoriumEntity extends BaseEntity {
     @Column(name = "participant_limit")
     private Integer participantLimit;
 
-    private String image;
+    @Column(name = "image_name")
+    private String imageName;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
