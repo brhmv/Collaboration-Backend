@@ -9,12 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProjectCardResponse {
+public class UserCardResponse {
 
     private Long id;
     private String imageName;
-    private String name;
-    private String shortDescription;
-    private UserCardResponse creator;
-    private String applicationDeadline;
+    private String fullName;
+    private String field;
 }
