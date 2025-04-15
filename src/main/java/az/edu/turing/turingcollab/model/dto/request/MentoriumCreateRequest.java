@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -25,11 +27,11 @@ public class MentoriumCreateRequest {
 
     @NotNull
     @Future
-    private String startDate;
+    private LocalDateTime startTime;
 
     @NotNull
     @Future
-    private String endDate;
+    private LocalDateTime endTime;
 
     private String place;
 

@@ -30,7 +30,7 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "participants")
 @Table(name = "mentorium")
 public class MentoriumEntity extends BaseEntity {
 
