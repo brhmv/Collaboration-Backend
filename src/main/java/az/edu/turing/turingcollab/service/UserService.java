@@ -18,6 +18,10 @@ public class UserService {
         return null;
     }
 
+    public UserEntity findMentoriumById(Long createdBy) {
+        return null;
+    }
+
     public void checkUserExists(Long id) {
         if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
     }

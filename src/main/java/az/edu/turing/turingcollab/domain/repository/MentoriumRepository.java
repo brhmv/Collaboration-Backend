@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface MentoriumRepository extends JpaRepository<MentoriumEntity, Long> {
 
-    List<MentoriumEntity> getAllByStatusIsAndApplicationDeadlineAfter(MentoriumStatus status, LocalDate deadline);
+    List<MentoriumEntity> getAllByStatusIs(MentoriumStatus status);
 
     List<MentoriumEntity> findAllByCreatedBy(Long userId);
 

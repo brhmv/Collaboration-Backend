@@ -1,7 +1,6 @@
 package az.edu.turing.turingcollab.model.dto.request;
 
 import az.edu.turing.turingcollab.model.enums.LessonType;
-import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,19 +23,9 @@ public class MentoriumUpdateRequest {
     private Integer participantLimit;
 
     @NotNull
-    @Future
-    private String startDate;
-
-    @NotNull
-    @Future
-    private String endDate;
-
-    @NotNull
-    @Future
     private String startTime;
 
     @NotNull
-    @Future
     private String endTime;
 
     private String place;
@@ -44,5 +33,5 @@ public class MentoriumUpdateRequest {
     @NotNull
     private LessonType lessonType;
 
-    private MultipartFile imageName;
+    private MultipartFile image;
 }

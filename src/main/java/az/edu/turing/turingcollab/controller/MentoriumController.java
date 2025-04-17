@@ -7,10 +7,12 @@ import az.edu.turing.turingcollab.service.MentoriumService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,21 +31,16 @@ public class MentoriumController {
 
     private final MentoriumService mentoriumService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Long> create(
             @RequestHeader("User-Id") Long userId,
-            @Valid @RequestBody MentoriumCreateRequest request) {
+            @Valid @ModelAttribute MentoriumCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(mentoriumService.create(userId, request));
     }
 
     @GetMapping
     public ResponseEntity<List<MentoriumCardResponse>> getAll() {
         return ResponseEntity.ok(mentoriumService.getAllMentoriums());
-    }
-
-    @GetMapping("/saved")
-    public ResponseEntity<List<MentoriumCardResponse>> getSaved(@RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok(mentoriumService.getSaved(userId));
     }
 
     @GetMapping("/{id}")

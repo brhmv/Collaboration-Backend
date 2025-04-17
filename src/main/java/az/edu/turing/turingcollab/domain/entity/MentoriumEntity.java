@@ -20,7 +20,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -56,9 +55,6 @@ public class MentoriumEntity extends BaseEntity {
 
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
-
-    @Column(name = "application_deadline", nullable = false)
-    private LocalDate applicationDeadline;
 
     private String place;
 
