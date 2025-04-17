@@ -8,8 +8,10 @@ public enum ErrorCode {
 
     USER_NOT_FOUND(HttpStatus.NOT_FOUND),
     PROJECT_NOT_FOUND(HttpStatus.NOT_FOUND),
-    INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR),
-    BAD_REQUEST(HttpStatus.BAD_REQUEST);
+    BAD_REQUEST(HttpStatus.BAD_REQUEST),
+    MENTORIUM_NOT_FOUND(HttpStatus.NOT_FOUND),
+    ALREADY_EXISTS(HttpStatus.BAD_REQUEST),
+    INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR);
 
     private final HttpStatus httpStatus;
 
