@@ -31,7 +31,7 @@ public interface ProjectAppMapper {
     default String formatInstant(Instant instant) {
         if (instant == null) return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm")
-                .withZone(ZoneId.of("Europe/Baku"));
+                .withZone(ZoneId.of("Europe/Berlin"));
         return formatter.format(instant);
     }
 }
