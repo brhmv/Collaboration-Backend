@@ -1,6 +1,7 @@
 package az.edu.turing.turingcollab.controller;
 
-import az.edu.turing.turingcollab.model.dto.response.ApplicationResponse;
+import az.edu.turing.turingcollab.model.dto.response.IncomingAppResponse;
+import az.edu.turing.turingcollab.model.dto.response.SentAppResponse;
 import az.edu.turing.turingcollab.service.ProjectAppService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,20 +20,20 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/projects/applications")
+@RequestMapping(value = "/api/v1/project-applications")
 public class ProjectAppController {
 
     private final ProjectAppService projectAppService;
 
     @GetMapping("/incoming")
-    public ResponseEntity<List<ApplicationResponse>> getIncomingApps(
+    public ResponseEntity<List<IncomingAppResponse>> getIncomingApps(
             @RequestHeader("User-Id") Long userId
     ) {
         return ResponseEntity.ok(projectAppService.getIncoming(userId));
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<List<ApplicationResponse>> getSent(
+    public ResponseEntity<List<SentAppResponse>> getSent(
             @RequestHeader("User-Id") Long userId
     ) {
         return ResponseEntity.ok(projectAppService.getSent(userId));

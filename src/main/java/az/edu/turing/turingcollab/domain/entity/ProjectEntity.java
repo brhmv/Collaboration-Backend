@@ -4,6 +4,8 @@ import az.edu.turing.turingcollab.model.enums.ProjectStatus;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -28,7 +30,7 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = {"applications", "participants"})
 @Table(name = "project")
 public class ProjectEntity extends BaseEntity {
 
@@ -54,14 +56,19 @@ public class ProjectEntity extends BaseEntity {
     private String fields;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<ProjectApplicationEntity> applications = new ArrayList<>();
 
-    @Column(name = "additional_link")
-    private String additionalLink;
+    private String file;
 
-    private String image;
+    private String link;
 
-    private ProjectStatus status;
+    @Column(name = "image_name")
+    private String imageName;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status = ProjectStatus.PENDING;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,

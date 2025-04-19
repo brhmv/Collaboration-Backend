@@ -29,7 +29,7 @@ import java.util.Set;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true, exclude = "participants")
 @Table(name = "mentorium")
 public class MentoriumEntity extends BaseEntity {
 
@@ -46,6 +46,7 @@ public class MentoriumEntity extends BaseEntity {
     @Column(nullable = false)
     private String topic;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     private MentoriumStatus status = MentoriumStatus.PENDING;
 
@@ -63,7 +64,8 @@ public class MentoriumEntity extends BaseEntity {
     @Column(name = "participant_limit")
     private Integer participantLimit;
 
-    private String image;
+    @Column(name = "image_name")
+    private String imageName;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,

@@ -4,6 +4,5 @@ public enum ProjectStatus {
 
     PENDING,
     ACCEPTED,
-    REJECTED,
-    DELETED
+    REJECTED
 }

@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: turing-collab
+    upload:
+      dir: C:\Users\Support\Documents\Java\Turing\Collaboration-Backend\src\main\resources\uploads
+  jpa:
+    show_sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+  datasource:
+    url: jdbc:postgresql://localhost:5438/postgres
+    username: postgres
+    password: 1234
