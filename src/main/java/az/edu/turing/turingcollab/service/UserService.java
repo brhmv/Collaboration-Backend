@@ -15,14 +15,10 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserEntity findById(Long createdBy) {
-        return null;
+        return userRepository.findById(createdBy).orElseThrow(() -> new UserNotFoundException(createdBy));
     }
 
-    public UserEntity findMentoriumById(Long createdBy) {
-        return null;
-    }
-
-    public void checkUserExists(Long id) {
+    public void checkIfExists(Long id) {
         if (!userRepository.existsById(id)) throw new UserNotFoundException(id);
     }
 }
