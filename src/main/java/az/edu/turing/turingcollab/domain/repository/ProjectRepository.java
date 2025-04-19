@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
@@ -18,4 +19,5 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
     void deleteAllByStatusAndUpdatedAtBetween(ProjectStatus status, Instant start, Instant end);
 
+    Optional<ProjectEntity> findByIdAndStatus(Long id, ProjectStatus status);
 }

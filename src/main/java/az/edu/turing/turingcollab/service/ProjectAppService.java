@@ -49,7 +49,7 @@ public class ProjectAppService {
     @Transactional
     public Long create(Long userId, Long projectId) {
         userService.checkIfExists(userId);
-        ProjectEntity projectEntity = projectService.findById(projectId);
+         ProjectEntity projectEntity = projectService.findByIdAndAccepted(projectId);
         if (projectEntity.getApplicationDeadline().isBefore(LocalDate.now())) {
             throw new BaseException("Application deadline of project with ID: " + projectId + " expired", BAD_REQUEST);
         }

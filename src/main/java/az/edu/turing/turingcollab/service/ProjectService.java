@@ -94,6 +94,11 @@ public class ProjectService {
         return projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
     }
 
+    public ProjectEntity findByIdAndAccepted(Long projectId) {
+        return projectRepository.findByIdAndStatus(projectId, ProjectStatus.ACCEPTED)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId));
+    }
+
     @Transactional
     public void delete(Long userId, Long projectId) {
         userService.checkIfExists(userId);
