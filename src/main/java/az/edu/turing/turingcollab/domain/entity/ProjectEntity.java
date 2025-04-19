@@ -67,7 +67,8 @@ public class ProjectEntity extends BaseEntity {
     private String imageName;
 
     @Builder.Default
-    private String status = ProjectStatus.PENDING.toString();
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status = ProjectStatus.PENDING;
 
     @ManyToMany(cascade = {
             CascadeType.PERSIST,
