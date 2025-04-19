@@ -56,7 +56,7 @@ public class MentoriumService {
     public List<MentoriumCardResponse> getAllMentoriums() {
         return mentoriumRepository.getAllByStatusIs(MentoriumStatus.ACCEPTED).stream().
                 map(m -> mentoriumMapper.toCardResponse(m,
-                        userService.findMentoriumById(m.getCreatedBy()))).toList();
+                        userService.findById(m.getCreatedBy()))).toList();
     }
 
     public MentoriumCardResponse getMentoriumById(Long id) {
