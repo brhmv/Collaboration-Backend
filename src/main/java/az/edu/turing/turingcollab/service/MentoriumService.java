@@ -34,10 +34,6 @@ public class MentoriumService {
 
     @Transactional
     public Long create(Long userId, MentoriumCreateRequest request) {
-        if (mentoriumRepository.existsById(userId)) {
-            throw new MentoriumAlreadyExistsException(userId);
-        }
-
         checkDateSequence(request);
 
         MentoriumEntity mentorium = mentoriumMapper.toEntity(userId, request);
@@ -64,17 +60,33 @@ public class MentoriumService {
                 new MentoriumNotFoundException(id)));
     }
 
-    public List<MentoriumCardResponse> getByCreator(Long userId) {
+    public List<MentoriumCardResponse> getAllByCreator(Long userId) {
         return mentoriumRepository.findAllByCreatedBy(userId)
                 .stream()
                 .map(mentoriumMapper::toCardResponse)
                 .toList();
     }
 
+    public List<MentoriumCardResponse> getAllByParticipant(Long userId) {
+        return userService.findById(userId)
+                .getMentoriums()
+                .stream()
+                .map(mentoriumMapper::toCardResponse)
+                .toList();
+    }
+
+    public List<MentoriumCardResponse> getAllSaved(Long userId) {
+        return userService.findById(userId)
+                .getMentoriums()
+                .stream()
+                .map(mentoriumMapper::toCardResponse)
+                .toList();
+    }
+
+
     @Transactional
     public Long update(Long userId, Long mentoriumId, MentoriumUpdateRequest request) {
-        MentoriumEntity mentorium = mentoriumRepository.findById(mentoriumId).orElseThrow(() ->
-                new MentoriumNotFoundException(mentoriumId));
+        MentoriumEntity mentorium = findById(mentoriumId);
 
         if (!mentorium.getCreatedBy().equals(userId)) {
             throw new AccessDeniedException("You do not have a permission to update this mentorium");
@@ -108,6 +120,20 @@ public class MentoriumService {
         mentoriumRepository.delete(mentorium);
     }
 
+    @Transactional
+    public void save(Long userId, Long mentoriumId) {
+        if (!userService.findById(userId).getSavedMentoriums().add(findById(mentoriumId))) {
+            throw new MentoriumAlreadyExistsException(mentoriumId);
+        }
+    }
+
+    @Transactional
+    public void deleteSaved(Long userId, Long mentoriumId) {
+        if (!userService.findById(userId).getSavedMentoriums().remove(findById(mentoriumId))) {
+            throw new MentoriumNotFoundException(mentoriumId);
+        }
+    }
+
     private void checkDateSequence(MentoriumCreateRequest request) {
         LocalDateTime startDate = LocalDateTime.parse(request.getStartTime(), DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
         LocalDateTime endDate = LocalDateTime.parse(request.getEndTime(), DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
@@ -115,5 +141,9 @@ public class MentoriumService {
         if (!(startDate.isBefore(endDate))) {
             throw new IllegalArgumentException("Start date must be before end date");
         }
+    }
+
+    public MentoriumEntity findById(Long mentoriumId) {
+        return mentoriumRepository.findById(mentoriumId).orElseThrow(() -> new MentoriumNotFoundException(mentoriumId));
     }
 }

@@ -6,7 +6,7 @@ import az.edu.turing.turingcollab.domain.entity.UserEntity;
 import az.edu.turing.turingcollab.domain.repository.ProjectAppRepository;
 import az.edu.turing.turingcollab.exception.AppNotFoundException;
 import az.edu.turing.turingcollab.exception.BaseException;
-import az.edu.turing.turingcollab.mapper.AppMapper;
+import az.edu.turing.turingcollab.mapper.ProjectAppMapper;
 import az.edu.turing.turingcollab.model.dto.response.IncomingAppResponse;
 import az.edu.turing.turingcollab.model.dto.response.SentAppResponse;
 import az.edu.turing.turingcollab.model.enums.ApplicationStatus;
@@ -27,13 +27,13 @@ public class ProjectAppService {
     private final ProjectAppRepository projectAppRepository;
     private final UserService userService;
     private final ProjectService projectService;
-    private final AppMapper appMapper;
+    private final ProjectAppMapper projectAppMapper;
 
     public List<SentAppResponse> getSent(Long userId) {
         userService.checkIfExists(userId);
         return projectAppRepository.findAllByStatusIsAndCreatedBy(ApplicationStatus.PENDING, userId)
                 .stream()
-                .map(appMapper::toSentAppResponse)
+                .map(projectAppMapper::toSentAppResponse)
                 .toList();
     }
 
@@ -42,7 +42,7 @@ public class ProjectAppService {
         UserEntity userEntity = userService.findById(userId);
         return projectAppRepository
                 .findAllByStatusIsAndProject_CreatedBy(ApplicationStatus.PENDING, userId)
-                .stream().map(a -> appMapper.toIncomingAppResponse(a, userEntity))
+                .stream().map(a -> projectAppMapper.toIncomingAppResponse(a, userEntity))
                 .toList();
     }
 

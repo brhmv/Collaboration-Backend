@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter;
         uses = UserMapper.class,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
-public interface AppMapper {
+public interface ProjectAppMapper {
 
     @Mapping(source = "entity.id", target = "id")
     @Mapping(target = "createdAt", expression = "java(formatInstant(entity.getCreatedAt()))")

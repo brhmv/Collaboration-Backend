@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,8 +50,18 @@ public class MentoriumController {
     }
 
     @GetMapping("/creator")
-    public ResponseEntity<List<MentoriumCardResponse>> getByCreator(@RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(mentoriumService.getByCreator(userId));
+    public ResponseEntity<List<MentoriumCardResponse>> getAllByCreator(@RequestHeader("User-Id") Long userId) {
+        return ResponseEntity.ok().body(mentoriumService.getAllByCreator(userId));
+    }
+
+    @GetMapping("/participant")
+    public ResponseEntity<List<MentoriumCardResponse>> getAllByParticipant(@RequestHeader("User-Id") Long userId) {
+        return ResponseEntity.ok().body(mentoriumService.getAllByParticipant(userId));
+    }
+
+    @GetMapping("/saved")
+    public ResponseEntity<List<MentoriumCardResponse>> getAllSaved(@RequestHeader("User-Id") Long userId) {
+        return ResponseEntity.ok().body(mentoriumService.getAllSaved(userId));
     }
 
     @PutMapping("/{mentoriumId}")
@@ -59,6 +70,24 @@ public class MentoriumController {
             @PathVariable Long mentoriumId,
             @Valid @RequestBody MentoriumUpdateRequest request) {
         return ResponseEntity.ok(mentoriumService.update(userId, mentoriumId, request));
+    }
+
+    @PatchMapping("/save/{mentoriumId}")
+    public ResponseEntity<Void> save(
+            @RequestHeader("User-Id") Long userId,
+            @PathVariable Long mentoriumId
+    ) {
+        mentoriumService.save(userId, mentoriumId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/delete-saved/{mentoriumId}")
+    public ResponseEntity<Void> deleteSaved(
+            @RequestHeader("User-Id") Long userId,
+            @PathVariable Long mentoriumId
+    ) {
+        mentoriumService.deleteSaved(userId, mentoriumId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{mentoriumId}")
