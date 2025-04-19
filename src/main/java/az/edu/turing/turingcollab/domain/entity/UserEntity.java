@@ -18,9 +18,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -69,5 +67,5 @@ public class UserEntity extends BaseEntity {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "mentorium_id"))
     @Builder.Default
-    private List<MentoriumEntity> savedMentoriums = new ArrayList<>();
+    private Set<MentoriumEntity> savedMentoriums = new HashSet<>();
 }
