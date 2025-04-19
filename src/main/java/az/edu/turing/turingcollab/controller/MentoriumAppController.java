@@ -1,6 +1,6 @@
 package az.edu.turing.turingcollab.controller;
 
-import az.edu.turing.turingcollab.model.dto.response.ApplicationResponse;
+import az.edu.turing.turingcollab.model.dto.response.IncomingAppResponse;
 import az.edu.turing.turingcollab.service.MentoriumAppService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/mentoriums/applications")
+@RequestMapping("/api/v1/mentorium-applications")
 public class MentoriumAppController {
 
     private final MentoriumAppService mentoriumAppService;
@@ -31,12 +31,12 @@ public class MentoriumAppController {
     }
 
     @GetMapping("/incoming")
-    public ResponseEntity<List<ApplicationResponse>> getIncomingApps(@RequestHeader("User-Id") Long userId) {
+    public ResponseEntity<List<IncomingAppResponse>> getIncomingApps(@RequestHeader("User-Id") Long userId) {
         return ResponseEntity.ok(mentoriumAppService.getIncomingApps(userId));
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<List<ApplicationResponse>> getSentApps(@RequestHeader("User-Id") Long userId) {
+    public ResponseEntity<List<IncomingAppResponse>> getSentApps(@RequestHeader("User-Id") Long userId) {
         return ResponseEntity.ok(mentoriumAppService.getSentApps(userId));
     }
 

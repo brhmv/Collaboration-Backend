@@ -5,6 +5,7 @@ import az.edu.turing.turingcollab.domain.repository.ProjectRepository;
 import az.edu.turing.turingcollab.exception.BaseException;
 import az.edu.turing.turingcollab.exception.IllegalArgumentException;
 import az.edu.turing.turingcollab.exception.InvalidDateFormatException;
+import az.edu.turing.turingcollab.exception.ProjectAlreadyExistsException;
 import az.edu.turing.turingcollab.exception.ProjectNotFoundException;
 import az.edu.turing.turingcollab.mapper.ProjectMapper;
 import az.edu.turing.turingcollab.model.dto.request.ProjectCreateRequest;
@@ -47,7 +48,7 @@ public class ProjectService {
 
     @Transactional
     public Long create(Long userId, ProjectCreateRequest request) {
-        userService.checkUserExists(userId);
+        userService.checkIfExists(userId);
         validateRequest(request, false);
 
         ProjectEntity projectEntity = projectMapper.toEntity(userId, request);
@@ -59,7 +60,7 @@ public class ProjectService {
             }
 
         } catch (IOException e) {
-            throw new BaseException("Something went wrong. Try again", ErrorCode.BAD_REQUEST);
+            throw new BaseException("Something went wrong. Try again", ErrorCode.INTERNAL_ERROR);
         }
 
         return projectRepository.save(projectEntity).getId();
@@ -67,7 +68,7 @@ public class ProjectService {
 
     @Transactional
     public Long updateById(Long userId, Long projectId, ProjectCreateRequest request) {
-        userService.checkUserExists(userId);
+        userService.checkIfExists(userId);
         validateRequest(request, true);
 
         ProjectEntity entity = findById(projectId);
@@ -89,14 +90,13 @@ public class ProjectService {
         return entity.getId();
     }
 
-    private ProjectEntity findById(Long projectId) {
+    public ProjectEntity findById(Long projectId) {
         return projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
     }
 
     @Transactional
     public void delete(Long userId, Long projectId) {
-        userService.checkUserExists(userId);
-
+        userService.checkIfExists(userId);
         ProjectEntity project = findById(projectId);
         fileStorageService.deleteFile(project.getImageName());
         fileStorageService.deleteFile(project.getFile());
@@ -105,7 +105,7 @@ public class ProjectService {
     }
 
     public List<ProjectCardResponse> getAllByCreatorId(Long userId) {
-        userService.checkUserExists(userId);
+        userService.checkIfExists(userId);
 
         return projectRepository.getAllByCreatedBy(userId)
                 .stream()
@@ -159,6 +159,36 @@ public class ProjectService {
             return LocalDate.parse(date, DateTimeFormatter.ofPattern(DATE_FORMAT_2));
         } catch (DateTimeParseException e) {
             throw new InvalidDateFormatException(date);
+        }
+    }
+
+    public List<ProjectCardResponse> getAllByParticipant(Long userId) {
+        return userService.findById(userId)
+                .getProjects()
+                .stream()
+                .map(projectMapper::toCardResponse)
+                .toList();
+    }
+
+    public List<ProjectCardResponse> getAllSaved(Long userId) {
+        return userService.findById(userId)
+                .getSavedProjects()
+                .stream()
+                .map(projectMapper::toCardResponse)
+                .toList();
+    }
+
+    @Transactional
+    public void save(Long userId, Long projectId) {
+        if (!userService.findById(userId).getSavedProjects().add(findById(projectId))) {
+            throw new ProjectAlreadyExistsException(projectId);
+        }
+    }
+
+    @Transactional
+    public void deleteSaved(Long userId, Long projectId) {
+        if (!userService.findById(userId).getSavedProjects().remove(findById(projectId))) {
+            throw new ProjectNotFoundException("Saved projects don't contain project with ID: " + projectId);
         }
     }
 }

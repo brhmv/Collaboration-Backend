@@ -1,6 +1,6 @@
 package az.edu.turing.turingcollab.service;
 
-import az.edu.turing.turingcollab.model.dto.response.ApplicationResponse;
+import az.edu.turing.turingcollab.model.dto.response.IncomingAppResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,11 +24,11 @@ public class MentoriumAppService {
 
     }
 
-    public List<ApplicationResponse> getIncomingApps(Long userId) {
+    public List<IncomingAppResponse> getIncomingApps(Long userId) {
         return null;
     }
 
-    public List<ApplicationResponse> getSentApps(Long userId) {
+    public List<IncomingAppResponse> getSentApps(Long userId) {
         return null;
     }
 }

@@ -54,17 +54,15 @@ public class UserEntity extends BaseEntity {
     private Set<MentoriumEntity> mentoriums = new HashSet<>();
 
     @ManyToMany(cascade = {
-            CascadeType.PERSIST,
             CascadeType.MERGE
     }, fetch = FetchType.LAZY)
     @JoinTable(name = "user_saved_project",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "project_id"))
     @Builder.Default
-    private List<ProjectEntity> savedProjects = new ArrayList<>();
+    private Set<ProjectEntity> savedProjects = new HashSet<>();
 
     @ManyToMany(cascade = {
-            CascadeType.PERSIST,
             CascadeType.MERGE
     }, fetch = FetchType.LAZY)
     @JoinTable(name = "user_saved_mentorium",

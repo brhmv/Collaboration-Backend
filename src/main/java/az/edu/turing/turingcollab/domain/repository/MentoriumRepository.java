@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -24,4 +24,6 @@ public interface MentoriumRepository extends JpaRepository<MentoriumEntity, Long
                     WHERE usm.user_id = :userId
             """, nativeQuery = true)
     List<MentoriumEntity> findSavedMentoriumsByUserId(@Param("userId") Long userId);
+
+    void deleteAllByStatusAndUpdatedAtBetween(MentoriumStatus status, Instant start, Instant end);
 }

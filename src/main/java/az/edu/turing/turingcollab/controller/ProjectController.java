@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,9 +41,21 @@ public class ProjectController {
     }
 
     @GetMapping("/creator")
-    public ResponseEntity<List<ProjectCardResponse>> getByCreator(
+    public ResponseEntity<List<ProjectCardResponse>> getAllByCreator(
             @RequestHeader("User-Id") Long userId) {
         return ResponseEntity.ok().body(projectService.getAllByCreatorId(userId));
+    }
+
+    @GetMapping("/participant")
+    public ResponseEntity<List<ProjectCardResponse>> getAllByParticipant(
+            @RequestHeader("User-Id") Long userId) {
+        return ResponseEntity.ok().body(projectService.getAllByParticipant(userId));
+    }
+
+    @GetMapping("/saved")
+    public ResponseEntity<List<ProjectCardResponse>> getAllSaved(
+            @RequestHeader("User-Id") Long userId) {
+        return ResponseEntity.ok().body(projectService.getAllSaved(userId));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -59,6 +72,24 @@ public class ProjectController {
             @ModelAttribute ProjectCreateRequest request
     ) {
         return ResponseEntity.ok(projectService.updateById(userId, projectId, request));
+    }
+
+    @PatchMapping("/save/{projectId}")
+    public ResponseEntity<Void> save(
+            @RequestHeader("User-Id") Long userId,
+            @PathVariable Long projectId
+    ) {
+        projectService.save(userId, projectId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/delete-saved/{projectId}")
+    public ResponseEntity<Void> deleteSaved(
+            @RequestHeader("User-Id") Long userId,
+            @PathVariable Long projectId
+    ) {
+        projectService.deleteSaved(userId, projectId);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{projectId}")
