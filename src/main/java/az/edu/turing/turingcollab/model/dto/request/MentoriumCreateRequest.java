@@ -17,15 +17,17 @@ public class MentoriumCreateRequest {
     @NotNull
     private String topic;
 
+    private String mentorField;
+
+    private String mentorFullName;
+
     @NotNull
     private String shortDescription;
 
     private Integer participantLimit;
 
-    @NotNull
     private String startTime;
 
-    @NotNull
     private String endTime;
 
     private String place;
