@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009_create_user_saved_mentorium_table
+      author: Adil Ismayilov
+      changes:
+        - createTable:
+            tableName: user_saved_mentorium
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mentorium_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: user_saved_mentorium
+            baseColumnNames: user_id
+            constraintName: fk_user_saved_mentorium_user
+            referencedTableName: users
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: user_saved_mentorium
+            baseColumnNames: mentorium_id
+            constraintName: fk_user_saved_mentorium_mentorium
+            referencedTableName: mentorium
+            referencedColumnNames: id

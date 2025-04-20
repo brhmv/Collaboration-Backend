@@ -58,6 +58,7 @@ public class MentoriumEntity extends BaseEntity {
 
     private String place;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "lesson_type", nullable = false)
     private LessonType lessonType;
 

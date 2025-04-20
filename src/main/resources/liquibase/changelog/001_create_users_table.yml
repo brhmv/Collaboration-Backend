@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_create_users_table
+      author: Adil Ismayilov
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: timestamp
+              - column:
+                  name: full_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(255)
+              - column:
+                  name: university
+                  type: varchar(255)
+              - column:
+                  name: field
+                  type: varchar(255)
+              - column:
+                  name: image_name
+                  type: varchar(255)

@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005_create_mentorium_application_table
+      author: Adil Ismayilov
+      changes:
+        - createTable:
+            tableName: mentorium_application
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: bigint
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: updated_at
+                  type: timestamp
+              - column:
+                  name: mentorium_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(255)
+        - addForeignKeyConstraint:
+            baseTableName: mentorium_application
+            baseColumnNames: mentorium_id
+            constraintName: fk_mentorium_application_mentorium
+            referencedTableName: mentorium
+            referencedColumnNames: id
