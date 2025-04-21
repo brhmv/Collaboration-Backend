@@ -42,14 +42,26 @@ public class ProjectAppService {
         UserEntity userEntity = userService.findById(userId);
         return projectAppRepository
                 .findAllByStatusIsAndProject_CreatedBy(ApplicationStatus.PENDING, userId)
-                .stream().map(a -> projectAppMapper.toIncomingAppResponse(a, userEntity))
+                .stream().map(a -> projectAppMapper.toIncomingAppResponse(a, userService.findById(a.getCreatedBy())))
                 .toList();
     }
 
     @Transactional
     public Long create(Long userId, Long projectId) {
         userService.checkIfExists(userId);
-         ProjectEntity projectEntity = projectService.findByIdAndAccepted(projectId);
+        ProjectEntity projectEntity = projectService.findByIdAndAccepted(projectId);
+        if (projectAppRepository.existsByCreatedByAndProject_IdAndStatus(
+                userId,
+                projectId,
+                ApplicationStatus.PENDING)) {
+            throw new BaseException("You already have pending application to this project", BAD_REQUEST);
+        }
+        if (projectAppRepository.existsByCreatedByAndProject_IdAndStatus(
+                userId,
+                projectId,
+                ApplicationStatus.ACCEPTED)) {
+            throw new BaseException("You are already participant to this project", BAD_REQUEST);
+        }
         if (projectEntity.getApplicationDeadline().isBefore(LocalDate.now())) {
             throw new BaseException("Application deadline of project with ID: " + projectId + " expired", BAD_REQUEST);
         }

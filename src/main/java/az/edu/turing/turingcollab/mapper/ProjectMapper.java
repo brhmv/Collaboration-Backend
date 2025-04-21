@@ -32,9 +32,6 @@ public interface ProjectMapper {
     ProjectCardResponse toCardResponse(ProjectEntity project, UserEntity creator);
 
     @Mapping(source = "project.applicationDeadline", target = "applicationDeadline", dateFormat = DATE_FORMAT)
-    ProjectCardResponse toCardResponse(ProjectEntity project);
-
-    @Mapping(source = "project.applicationDeadline", target = "applicationDeadline", dateFormat = DATE_FORMAT)
     @Mapping(source = "project.startDate", target = "startDate", dateFormat = DATE_FORMAT)
     @Mapping(source = "project.endDate", target = "endDate", dateFormat = DATE_FORMAT)
     @Mapping(source = "project.participants", target = "participants")

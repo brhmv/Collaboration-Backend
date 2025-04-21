@@ -22,6 +22,7 @@ public interface ProjectAppMapper {
     @Mapping(source = "entity.id", target = "id")
     @Mapping(target = "createdAt", expression = "java(formatInstant(entity.getCreatedAt()))")
     @Mapping(source = "entity.project.name", target = "topic")
+    @Mapping(source = "creator", target = "participant")
     IncomingAppResponse toIncomingAppResponse(ProjectApplicationEntity entity, UserEntity creator);
 
     @Mapping(target = "createdAt", expression = "java(formatInstant(entity.getCreatedAt()))")
@@ -31,7 +32,7 @@ public interface ProjectAppMapper {
     default String formatInstant(Instant instant) {
         if (instant == null) return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm")
-                .withZone(ZoneId.of("Europe/Berlin"));
+                .withZone(ZoneId.of("Asia/Baku"));
         return formatter.format(instant);
     }
 }

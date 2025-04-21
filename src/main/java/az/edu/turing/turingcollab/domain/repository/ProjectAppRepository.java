@@ -16,4 +16,6 @@ public interface ProjectAppRepository extends JpaRepository<ProjectApplicationEn
     List<ProjectApplicationEntity> findAllByStatusIsAndCreatedBy(ApplicationStatus status, Long createdBy);
 
     void deleteAllByStatusAndUpdatedAtBetween(ApplicationStatus status, Instant start, Instant end);
+
+    boolean existsByCreatedByAndProject_IdAndStatus(Long cratedBy, Long projectId, ApplicationStatus statuses);
 }

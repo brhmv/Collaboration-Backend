@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class IncomingAppResponse {
 
     private Long id;
-    private UserCardResponse creator;
+    private UserCardResponse participant;
     private String createdAt;
     private String topic;
 }
