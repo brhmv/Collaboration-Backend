@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
+import static az.edu.turing.turingcollab.model.enums.ErrorCode.BAD_REQUEST;
+
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
@@ -25,7 +27,7 @@ public class GlobalExceptionHandler {
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -33,13 +35,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<GlobalErrorResponse> handleBaseException(AccessDeniedException ex) {
+    public ResponseEntity<GlobalErrorResponse> handleAccessDeniedException(AccessDeniedException ex) {
         addErrorLog(ex.getCode().getHttpStatus(), ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(Optional
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -47,13 +49,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AppNotFoundException.class)
-    public ResponseEntity<GlobalErrorResponse> handleBaseException(AppNotFoundException ex) {
+    public ResponseEntity<GlobalErrorResponse> handleAppNotFoundException(AppNotFoundException ex) {
         addErrorLog(ex.getCode().getHttpStatus(), ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(Optional
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -61,13 +63,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<GlobalErrorResponse> handleBaseException(IllegalArgumentException ex) {
+    public ResponseEntity<GlobalErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         addErrorLog(ex.getCode().getHttpStatus(), ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(Optional
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -75,13 +77,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidDateFormatException.class)
-    public ResponseEntity<GlobalErrorResponse> handleBaseException(InvalidDateFormatException ex) {
+    public ResponseEntity<GlobalErrorResponse> handleInvalidDateFormatException(InvalidDateFormatException ex) {
         addErrorLog(ex.getCode().getHttpStatus(), ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(Optional
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -89,13 +91,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MentoriumAlreadyExistsException.class)
-    public ResponseEntity<GlobalErrorResponse> handleBaseException(MentoriumAlreadyExistsException ex) {
+    public ResponseEntity<GlobalErrorResponse> handleMentoriumAlreadyExistsException(MentoriumAlreadyExistsException ex) {
         addErrorLog(ex.getCode().getHttpStatus(), ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(Optional
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -103,13 +105,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MentoriumNotFoundException.class)
-    public ResponseEntity<GlobalErrorResponse> handleBaseException(MentoriumNotFoundException ex) {
+    public ResponseEntity<GlobalErrorResponse> handleMentoriumNotFoundException(MentoriumNotFoundException ex) {
         addErrorLog(ex.getCode().getHttpStatus(), ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(Optional
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -117,13 +119,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ProjectAlreadyExistsException.class)
-    public ResponseEntity<GlobalErrorResponse> handleBaseException(ProjectAlreadyExistsException ex) {
+    public ResponseEntity<GlobalErrorResponse> handleProjectAlreadyExistsException(ProjectAlreadyExistsException ex) {
         addErrorLog(ex.getCode().getHttpStatus(), ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(Optional
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -131,13 +133,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ProjectNotFoundException.class)
-    public ResponseEntity<GlobalErrorResponse> handleBaseException(ProjectNotFoundException ex) {
+    public ResponseEntity<GlobalErrorResponse> handleProjectNotFoundException(ProjectNotFoundException ex) {
         addErrorLog(ex.getCode().getHttpStatus(), ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(Optional
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -145,13 +147,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<GlobalErrorResponse> handleBaseException(UserNotFoundException ex) {
+    public ResponseEntity<GlobalErrorResponse> handleUserNotFoundException(UserNotFoundException ex) {
         addErrorLog(ex.getCode().getHttpStatus(), ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(Optional
                         .ofNullable(ex.getCode().getHttpStatus())
                         .orElse(HttpStatus.INTERNAL_SERVER_ERROR))
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(ex.getCode().getHttpStatus().value())
+                        .errorCode(ex.getCode())
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -163,7 +165,7 @@ public class GlobalExceptionHandler {
         addErrorLog(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(400)
+                        .errorCode(BAD_REQUEST)
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -175,7 +177,7 @@ public class GlobalExceptionHandler {
         addErrorLog(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(400)
+                        .errorCode(BAD_REQUEST)
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
@@ -188,7 +190,7 @@ public class GlobalExceptionHandler {
         addErrorLog(HttpStatus.BAD_REQUEST, ex.getMessage(), ex.getClass().getSimpleName());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(GlobalErrorResponse.builder()
-                        .errorCode(400)
+                        .errorCode(BAD_REQUEST)
                         .errorMessage(ex.getMessage())
                         .timestamp(LocalDateTime.now())
                         .requestId(UUID.randomUUID())
