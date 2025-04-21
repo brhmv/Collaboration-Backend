@@ -20,4 +20,6 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     void deleteAllByStatusAndUpdatedAtBetween(ProjectStatus status, Instant start, Instant end);
 
     Optional<ProjectEntity> findByIdAndStatus(Long id, ProjectStatus status);
+
+    List<ProjectEntity> findAllByStatus(ProjectStatus status);
 }

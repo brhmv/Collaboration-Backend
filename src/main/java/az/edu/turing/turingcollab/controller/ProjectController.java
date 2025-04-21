@@ -58,6 +58,13 @@ public class ProjectController {
         return ResponseEntity.ok().body(projectService.getAllSaved(userId));
     }
 
+    @GetMapping("/pending")
+    public ResponseEntity<List<ProjectCardResponse>> getAllPending(
+            @RequestHeader("User-Id") Long userId
+    ){
+        return ResponseEntity.ok(projectService.getAllPending(userId));
+    }
+
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Long> create(
             @RequestHeader("User-Id") Long userId,
@@ -89,6 +96,24 @@ public class ProjectController {
             @PathVariable Long projectId
     ) {
         projectService.deleteSaved(userId, projectId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/accept/{projectId}")
+    public ResponseEntity<Void> accept(
+            @RequestHeader("User-Id") Long userId,
+            @PathVariable Long projectId
+    ){
+        projectService.accept(userId, projectId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/reject/{projectId}")
+    public ResponseEntity<Void> reject(
+            @RequestHeader("User-Id") Long userId,
+            @PathVariable Long projectId
+    ){
+        projectService.reject(userId, projectId);
         return ResponseEntity.noContent().build();
     }
 

@@ -196,4 +196,28 @@ public class ProjectService {
             throw new ProjectNotFoundException("Saved projects don't contain project with ID: " + projectId);
         }
     }
+
+    @Transactional
+    public void accept(Long userId, Long projectId) {
+        // Check user is admin?
+        userService.checkIfExists(userId);
+        findById(projectId).setStatus(ProjectStatus.ACCEPTED);
+    }
+
+    @Transactional
+    public void reject(Long userId, Long projectId) {
+        // Check user is admin?
+        userService.checkIfExists(userId);
+        findById(projectId).setStatus(ProjectStatus.REJECTED);
+    }
+
+    public List<ProjectCardResponse> getAllPending(Long userId) {
+        //user is admin?
+        userService.checkIfExists(userId);
+        return projectRepository
+                .findAllByStatus(ProjectStatus.PENDING)
+                .stream()
+                .map(projectMapper::toCardResponse)
+                .toList();
+    }
 }
