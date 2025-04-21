@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004_create_project_application_table
+      author: Adil Ismayilov
+      changes:
+        - createTable:
+            tableName: project_application
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: bigint
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: updated_at
+                  type: timestamp
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(255)
+        - addForeignKeyConstraint:
+            baseTableName: project_application
+            baseColumnNames: project_id
+            constraintName: fk_project_application_project
+            referencedTableName: project
+            referencedColumnNames: id

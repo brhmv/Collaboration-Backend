@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003_create_mentorium_table
+      author: Adil Ismayilov
+      changes:
+        - createTable:
+            tableName: mentorium
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: created_by
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_by
+                  type: bigint
+              - column:
+                  name: created_at
+                  type: timestamp
+              - column:
+                  name: updated_at
+                  type: timestamp
+              - column:
+                  name: mentor_fullname
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mentor_field
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: short_description
+                  type: varchar(255)
+              - column:
+                  name: topic
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(255)
+              - column:
+                  name: start_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: place
+                  type: varchar(255)
+              - column:
+                  name: lesson_type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: participant_limit
+                  type: integer
+              - column:
+                  name: image_name
+                  type: varchar(255)

@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 010_load_data_users_table
+      author: Adil Ismayilov
+      changes:
+        - sql:
+            sql: |
+              INSERT INTO public.users (id, full_name, email, university, field, image_name) VALUES
+              (1, 'Adil Ismayilov', 'adil@gmail.com', 'BEU', 'BACKEND_DEVELOPER', 'adil.jpg'),
+              (2, 'Anar Fataliyev', 'anar@gmail.com', 'BEU', 'BACKEND_DEVELOPER', 'anar.jpg');
+
+        - sql:
+            sql: |
+              SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));

@@ -37,22 +37,25 @@ public class ProjectEntity extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String description;
 
     @Column(name = "short_description", nullable = false)
     private String shortDescription;
 
+    @Column(nullable = false)
     private String requirements;
 
-    @Column(name = "start_date")
+    @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
     @Column(name = "application_deadline", nullable = false)
     private LocalDate applicationDeadline;
 
+    @Column(nullable = false)
     private String fields;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -63,7 +66,7 @@ public class ProjectEntity extends BaseEntity {
 
     private String link;
 
-    @Column(name = "image_name")
+    @Column(name = "image_name", nullable = false)
     private String imageName;
 
     @Builder.Default

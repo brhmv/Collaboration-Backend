@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008_create_user_saved_project_table
+      author: Adil Ismayilov
+      changes:
+        - createTable:
+            tableName: user_saved_project
+            columns:
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: user_saved_project
+            baseColumnNames: user_id
+            constraintName: fk_user_saved_project_user
+            referencedTableName: users
+            referencedColumnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: user_saved_project
+            baseColumnNames: project_id
+            constraintName: fk_user_saved_project_project
+            referencedTableName: project
+            referencedColumnNames: id
