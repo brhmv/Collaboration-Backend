@@ -2,7 +2,7 @@ spring:
   application:
     name: turing-collab
     upload:
-      dir: C:\Users\Support\Documents\Java\Turing\Collaboration-Backend\src\main\resources\uploads
+      dir: static/uploads
   jpa:
     show_sql: true
     hibernate:

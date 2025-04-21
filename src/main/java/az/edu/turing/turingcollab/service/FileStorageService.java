@@ -31,7 +31,7 @@ public class FileStorageService {
             throw new IllegalArgumentException("File size exceeds limit of 5MB");
         }
 
-        Path uploadPath = Paths.get(uploadDir);
+        Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
         }
