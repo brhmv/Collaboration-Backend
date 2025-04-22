@@ -2,18 +2,18 @@ package az.edu.turing.turingcollab.service;
 
 import az.edu.turing.turingcollab.domain.entity.MentoriumApplicationEntity;
 import az.edu.turing.turingcollab.domain.entity.MentoriumEntity;
-import az.edu.turing.turingcollab.domain.entity.UserEntity;
 import az.edu.turing.turingcollab.domain.repository.MentoriumAppRepository;
 import az.edu.turing.turingcollab.exception.AppNotFoundException;
 import az.edu.turing.turingcollab.mapper.MentoriumAppMapper;
 import az.edu.turing.turingcollab.model.dto.response.IncomingAppResponse;
+import az.edu.turing.turingcollab.model.dto.response.PageResponse;
 import az.edu.turing.turingcollab.model.dto.response.SentAppResponse;
 import az.edu.turing.turingcollab.model.enums.ApplicationStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,21 +52,31 @@ public class MentoriumAppService {
         findById(mentoriumId).setStatus(ApplicationStatus.REJECTED);
     }
 
-    public List<IncomingAppResponse> getIncomingApps(Long userId) {
-        userService.checkIfExists(userId);
-        UserEntity userEntity = userService.findById(userId);
-        return mentoriumAppRepository
-                .findAllByStatusIsAndMentorium_CreatedBy(ApplicationStatus.PENDING, userId)
-                .stream().map(a -> mentoriumAppMapper.toIncomingAppResponse(a, userEntity))
-                .toList();
+    public PageResponse<IncomingAppResponse> getIncomingApps(Long userId, final int pageNumber, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        var responses = mentoriumAppRepository
+                .findAllByStatusIsAndMentorium_CreatedBy(ApplicationStatus.PENDING, userId, pageable)
+                .map(m -> mentoriumAppMapper.toIncomingAppResponse(m, userService.findById(m.getCreatedBy())));
+
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
-    public List<SentAppResponse> getSentApps(Long userId) {
-        userService.checkIfExists(userId);
-        return mentoriumAppRepository.findAllByStatusIsAndCreatedBy(ApplicationStatus.PENDING, userId)
-                .stream()
-                .map(mentoriumAppMapper::toSentAppResponse)
-                .toList();
+    public PageResponse<SentAppResponse> getSentApps(Long userId, final int pageNumber, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        var responses = mentoriumAppRepository.findAllByCreatedBy(userId, pageable)
+                .map(mentoriumAppMapper::toSentAppResponse);
+
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
     public MentoriumApplicationEntity findById(Long id) {

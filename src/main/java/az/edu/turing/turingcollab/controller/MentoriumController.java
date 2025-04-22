@@ -3,8 +3,10 @@ package az.edu.turing.turingcollab.controller;
 import az.edu.turing.turingcollab.model.dto.request.MentoriumCreateRequest;
 import az.edu.turing.turingcollab.model.dto.request.MentoriumUpdateRequest;
 import az.edu.turing.turingcollab.model.dto.response.MentoriumCardResponse;
+import az.edu.turing.turingcollab.model.dto.response.PageResponse;
 import az.edu.turing.turingcollab.service.MentoriumService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,9 +22,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import static az.edu.turing.turingcollab.model.constant.PageConstants.DEFAULT_PAGE_NUMBER;
+import static az.edu.turing.turingcollab.model.constant.PageConstants.DEFAULT_PAGE_SIZE;
 
 @Validated
 @RestController
@@ -40,8 +44,11 @@ public class MentoriumController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MentoriumCardResponse>> getAll() {
-        return ResponseEntity.ok(mentoriumService.getAllMentoriums());
+    public ResponseEntity<PageResponse<MentoriumCardResponse>> getAll(
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize
+    ) {
+        return ResponseEntity.ok(mentoriumService.getAllMentoriums(pageNumber, pageSize));
     }
 
     @GetMapping("/{id}")
@@ -50,18 +57,39 @@ public class MentoriumController {
     }
 
     @GetMapping("/creator")
-    public ResponseEntity<List<MentoriumCardResponse>> getAllByCreator(@RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(mentoriumService.getAllByCreator(userId));
+    public ResponseEntity<PageResponse<MentoriumCardResponse>> getAllByCreator(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize
+    ) {
+        return ResponseEntity.ok().body(mentoriumService.getAllByCreator(userId, pageNumber, pageSize));
     }
 
     @GetMapping("/participant")
-    public ResponseEntity<List<MentoriumCardResponse>> getAllByParticipant(@RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(mentoriumService.getAllByParticipant(userId));
+    public ResponseEntity<PageResponse<MentoriumCardResponse>> getAllByParticipant(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize
+    ) {
+        return ResponseEntity.ok().body(mentoriumService.getAllByParticipant(userId, pageNumber, pageSize));
     }
 
     @GetMapping("/saved")
-    public ResponseEntity<List<MentoriumCardResponse>> getAllSaved(@RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(mentoriumService.getAllSaved(userId));
+    public ResponseEntity<PageResponse<MentoriumCardResponse>> getAllSaved(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize
+    ) {
+        return ResponseEntity.ok().body(mentoriumService.getAllSaved(userId, pageNumber, pageSize));
+    }
+
+    @GetMapping("/pending")
+    public ResponseEntity<PageResponse<MentoriumCardResponse>> getAllPending(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize
+    ) {
+        return ResponseEntity.ok(mentoriumService.getAllPending(userId, pageNumber, pageSize));
     }
 
     @PutMapping("/{mentoriumId}")
@@ -87,6 +115,24 @@ public class MentoriumController {
             @PathVariable Long mentoriumId
     ) {
         mentoriumService.deleteSaved(userId, mentoriumId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/accept/{mentoriumId}")
+    public ResponseEntity<Void> accept(
+            @RequestHeader("User-Id") Long userId,
+            @PathVariable Long mentoriumId
+    ) {
+        mentoriumService.accept(userId, mentoriumId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/reject/{mentoriumId}")
+    public ResponseEntity<Void> reject(
+            @RequestHeader("User-Id") Long userId,
+            @PathVariable Long mentoriumId
+    ) {
+        mentoriumService.reject(userId, mentoriumId);
         return ResponseEntity.noContent().build();
     }
 

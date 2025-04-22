@@ -78,6 +78,10 @@ public class MentoriumEntity extends BaseEntity {
     @Builder.Default
     private Set<UserEntity> participants = new HashSet<>();
 
+    @ManyToMany(mappedBy = "savedMentoriums", fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<UserEntity> savedByUsers = new HashSet<>();
+
     public void addParticipant(UserEntity user) {
         participants.add(user);
         user.getMentoriums().add(this);
