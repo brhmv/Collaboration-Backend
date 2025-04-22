@@ -33,17 +33,17 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: description
-                  type: varchar(255)
+                  type: text
                   constraints:
                     nullable: false
               - column:
                   name: short_description
-                  type: varchar(255)
+                  type: text
                   constraints:
                     nullable: false
               - column:
                   name: requirements
-                  type: varchar(255)
+                  type: text
                   constraints:
                     nullable: false
               - column:

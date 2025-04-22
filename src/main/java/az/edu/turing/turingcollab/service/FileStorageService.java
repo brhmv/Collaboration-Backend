@@ -54,6 +54,9 @@ public class FileStorageService {
     }
 
     public void deleteFile(String fileName) {
+        if (fileName == null || fileName.isEmpty()) {
+            return;
+        }
         Path filePath = Paths.get(uploadDir).resolve(fileName).normalize();
         File file = filePath.toFile();
 

@@ -2,7 +2,6 @@ package az.edu.turing.turingcollab.service;
 
 import az.edu.turing.turingcollab.domain.entity.ProjectApplicationEntity;
 import az.edu.turing.turingcollab.domain.entity.ProjectEntity;
-import az.edu.turing.turingcollab.domain.entity.UserEntity;
 import az.edu.turing.turingcollab.domain.repository.ProjectAppRepository;
 import az.edu.turing.turingcollab.exception.AccessDeniedException;
 import az.edu.turing.turingcollab.exception.AppNotFoundException;
@@ -11,6 +10,7 @@ import az.edu.turing.turingcollab.mapper.ProjectAppMapper;
 import az.edu.turing.turingcollab.model.dto.response.IncomingAppResponse;
 import az.edu.turing.turingcollab.model.dto.response.SentAppResponse;
 import az.edu.turing.turingcollab.model.enums.ApplicationStatus;
+import az.edu.turing.turingcollab.model.enums.ProjectStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +49,10 @@ public class ProjectAppService {
     @Transactional
     public Long create(Long userId, Long projectId) {
         userService.checkIfExists(userId);
-        ProjectEntity projectEntity = projectService.findByIdAndAccepted(projectId);
+        ProjectEntity projectEntity = projectService.findById(projectId);
+        if (!projectEntity.getStatus().equals(ProjectStatus.ACCEPTED) || projectEntity.getApplicationDeadline().isBefore(LocalDate.now())) {
+            throw new BaseException("Can't create app to this project", BAD_REQUEST);
+        }
         if (projectAppRepository.existsByCreatedByAndProject_IdAndStatus(
                 userId,
                 projectId,
@@ -61,9 +64,6 @@ public class ProjectAppService {
                 projectId,
                 ApplicationStatus.ACCEPTED)) {
             throw new BaseException("You are already participant to this project", BAD_REQUEST);
-        }
-        if (projectEntity.getApplicationDeadline().isBefore(LocalDate.now())) {
-            throw new BaseException("Application deadline of project with ID: " + projectId + " expired", BAD_REQUEST);
         }
 
         return projectAppRepository

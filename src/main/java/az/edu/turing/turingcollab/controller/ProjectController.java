@@ -1,9 +1,11 @@
 package az.edu.turing.turingcollab.controller;
 
 import az.edu.turing.turingcollab.model.dto.request.ProjectCreateRequest;
+import az.edu.turing.turingcollab.model.dto.response.PageResponse;
 import az.edu.turing.turingcollab.model.dto.response.ProjectCardResponse;
 import az.edu.turing.turingcollab.model.dto.response.ProjectDetailedResponse;
 import az.edu.turing.turingcollab.service.ProjectService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,9 +20,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import static az.edu.turing.turingcollab.model.constant.PageConstants.DEFAULT_PAGE_NUMBER;
+import static az.edu.turing.turingcollab.model.constant.PageConstants.DEFAULT_PAGE_SIZE;
 
 @Validated
 @RestController
@@ -31,8 +35,11 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @GetMapping
-    public ResponseEntity<List<ProjectCardResponse>> getAll() {
-        return ResponseEntity.ok(projectService.getAll());
+    public ResponseEntity<PageResponse<ProjectCardResponse>> getAll(
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize
+    ) {
+        return ResponseEntity.ok(projectService.getAll(pageNumber, pageSize));
     }
 
     @GetMapping("/{id}")
@@ -41,28 +48,36 @@ public class ProjectController {
     }
 
     @GetMapping("/creator")
-    public ResponseEntity<List<ProjectCardResponse>> getAllByCreator(
-            @RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(projectService.getAllByCreatorId(userId));
+    public ResponseEntity<PageResponse<ProjectCardResponse>> getAllByCreator(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize) {
+        return ResponseEntity.ok().body(projectService.getAllByCreatorId(userId, pageNumber, pageSize));
     }
 
     @GetMapping("/participant")
-    public ResponseEntity<List<ProjectCardResponse>> getAllByParticipant(
-            @RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(projectService.getAllByParticipant(userId));
+    public ResponseEntity<PageResponse<ProjectCardResponse>> getAllByParticipant(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize) {
+        return ResponseEntity.ok().body(projectService.getAllByParticipant(userId, pageNumber, pageSize));
     }
 
     @GetMapping("/saved")
-    public ResponseEntity<List<ProjectCardResponse>> getAllSaved(
-            @RequestHeader("User-Id") Long userId) {
-        return ResponseEntity.ok().body(projectService.getAllSaved(userId));
+    public ResponseEntity<PageResponse<ProjectCardResponse>> getAllSaved(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize) {
+        return ResponseEntity.ok().body(projectService.getAllSaved(userId, pageNumber, pageSize));
     }
 
     @GetMapping("/pending")
-    public ResponseEntity<List<ProjectCardResponse>> getAllPending(
-            @RequestHeader("User-Id") Long userId
-    ){
-        return ResponseEntity.ok(projectService.getAllPending(userId));
+    public ResponseEntity<PageResponse<ProjectCardResponse>> getAllPending(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize
+    ) {
+        return ResponseEntity.ok(projectService.getAllPending(userId, pageNumber, pageSize));
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -103,7 +118,7 @@ public class ProjectController {
     public ResponseEntity<Void> accept(
             @RequestHeader("User-Id") Long userId,
             @PathVariable Long projectId
-    ){
+    ) {
         projectService.accept(userId, projectId);
         return ResponseEntity.noContent().build();
     }
@@ -112,7 +127,7 @@ public class ProjectController {
     public ResponseEntity<Void> reject(
             @RequestHeader("User-Id") Long userId,
             @PathVariable Long projectId
-    ){
+    ) {
         projectService.reject(userId, projectId);
         return ResponseEntity.noContent().build();
     }
