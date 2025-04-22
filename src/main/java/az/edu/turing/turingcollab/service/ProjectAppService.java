@@ -4,6 +4,7 @@ import az.edu.turing.turingcollab.domain.entity.ProjectApplicationEntity;
 import az.edu.turing.turingcollab.domain.entity.ProjectEntity;
 import az.edu.turing.turingcollab.domain.entity.UserEntity;
 import az.edu.turing.turingcollab.domain.repository.ProjectAppRepository;
+import az.edu.turing.turingcollab.exception.AccessDeniedException;
 import az.edu.turing.turingcollab.exception.AppNotFoundException;
 import az.edu.turing.turingcollab.exception.BaseException;
 import az.edu.turing.turingcollab.mapper.ProjectAppMapper;
@@ -31,7 +32,7 @@ public class ProjectAppService {
 
     public List<SentAppResponse> getSent(Long userId) {
         userService.checkIfExists(userId);
-        return projectAppRepository.findAllByStatusIsAndCreatedBy(ApplicationStatus.PENDING, userId)
+        return projectAppRepository.findAllByCreatedBy(userId)
                 .stream()
                 .map(projectAppMapper::toSentAppResponse)
                 .toList();
@@ -75,8 +76,9 @@ public class ProjectAppService {
     }
 
     @Transactional
-    public void approve(Long id) {
-        ProjectApplicationEntity applicationEntity = findById(id);
+    public void approve(Long userId, Long id) {
+        var applicationEntity = findById(id);
+        checkProjectCreator(applicationEntity, userId);
         ProjectEntity projectEntity = projectService.findById(applicationEntity.getProject().getId());
 
         applicationEntity.setStatus(ApplicationStatus.ACCEPTED);
@@ -84,8 +86,16 @@ public class ProjectAppService {
     }
 
     @Transactional
-    public void reject(Long id) {
-        findById(id).setStatus(ApplicationStatus.REJECTED);
+    public void reject(Long userId, Long appId) {
+        var applicationEntity = findById(appId);
+        checkProjectCreator(applicationEntity, userId);
+        findById(appId).setStatus(ApplicationStatus.REJECTED);
+    }
+
+    private void checkProjectCreator(ProjectApplicationEntity applicationEntity, Long userId) {
+        if (!applicationEntity.getProject().getCreatedBy().equals(userId)) {
+            throw new AccessDeniedException("You don't have permission to this process");
+        }
     }
 
     public ProjectApplicationEntity findById(Long id) {

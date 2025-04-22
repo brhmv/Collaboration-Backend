@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -29,7 +30,8 @@ public class CleanUpService {
         Instant start = now.minus(3, ChronoUnit.DAYS);
         Instant end = start.plus(1, ChronoUnit.DAYS);
 
-        projectAppRepository.deleteAllByStatusAndUpdatedAtBetween(ApplicationStatus.REJECTED, start, end);
+        projectAppRepository.deleteAllByStatusInAndUpdatedAtBetween(
+                Set.of(ApplicationStatus.REJECTED, ApplicationStatus.ACCEPTED), start, end);
         projectRepository.deleteAllByStatusAndUpdatedAtBetween(ProjectStatus.REJECTED, start, end);
         mentoriumRepository.deleteAllByStatusAndUpdatedAtBetween(MentoriumStatus.REJECTED, start, end);
     }
