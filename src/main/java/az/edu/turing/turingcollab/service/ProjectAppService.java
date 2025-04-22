@@ -40,7 +40,6 @@ public class ProjectAppService {
 
     public List<IncomingAppResponse> getIncoming(Long userId) {
         userService.checkIfExists(userId);
-        UserEntity userEntity = userService.findById(userId);
         return projectAppRepository
                 .findAllByStatusIsAndProject_CreatedBy(ApplicationStatus.PENDING, userId)
                 .stream().map(a -> projectAppMapper.toIncomingAppResponse(a, userService.findById(a.getCreatedBy())))
