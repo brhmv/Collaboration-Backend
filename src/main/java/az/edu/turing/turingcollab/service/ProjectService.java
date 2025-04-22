@@ -9,11 +9,14 @@ import az.edu.turing.turingcollab.exception.ProjectAlreadyExistsException;
 import az.edu.turing.turingcollab.exception.ProjectNotFoundException;
 import az.edu.turing.turingcollab.mapper.ProjectMapper;
 import az.edu.turing.turingcollab.model.dto.request.ProjectCreateRequest;
+import az.edu.turing.turingcollab.model.dto.response.PageResponse;
 import az.edu.turing.turingcollab.model.dto.response.ProjectCardResponse;
 import az.edu.turing.turingcollab.model.dto.response.ProjectDetailedResponse;
 import az.edu.turing.turingcollab.model.enums.ErrorCode;
 import az.edu.turing.turingcollab.model.enums.ProjectStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +24,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.List;
 
 import static az.edu.turing.turingcollab.model.constant.AppConstant.DATE_FORMAT_2;
 
@@ -35,11 +37,17 @@ public class ProjectService {
     private final ProjectMapper projectMapper;
     private final FileStorageService fileStorageService;
 
-    public List<ProjectCardResponse> getAll() {
-        return projectRepository
-                .getAllByStatusIsAndApplicationDeadlineAfter(ProjectStatus.ACCEPTED, LocalDate.now())
-                .stream().map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())))
-                .toList();
+    public PageResponse<ProjectCardResponse> getAll(final int pageNumber, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = projectRepository.findAllByStatusIsAndApplicationDeadlineAfter(ProjectStatus.ACCEPTED, LocalDate.now(), pageable)
+                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())));
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
     public ProjectDetailedResponse getById(Long id) {
@@ -94,11 +102,6 @@ public class ProjectService {
         return projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException(projectId));
     }
 
-    public ProjectEntity findByIdAndAccepted(Long projectId) {
-        return projectRepository.findByIdAndStatus(projectId, ProjectStatus.ACCEPTED)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId));
-    }
-
     @Transactional
     public void delete(Long userId, Long projectId) {
         userService.checkIfExists(userId);
@@ -109,13 +112,20 @@ public class ProjectService {
         projectRepository.deleteById(projectId);
     }
 
-    public List<ProjectCardResponse> getAllByCreatorId(Long userId) {
+    public PageResponse<ProjectCardResponse> getAllByCreatorId(Long userId, final int pageNumber, final int pageSize) {
         userService.checkIfExists(userId);
 
-        return projectRepository.getAllByCreatedBy(userId)
-                .stream()
-                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())))
-                .toList();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = projectRepository.findAllByCreatedBy(userId, pageable)
+                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())));
+
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
     private void validateRequest(ProjectCreateRequest request, boolean isUpdate) {
@@ -167,20 +177,31 @@ public class ProjectService {
         }
     }
 
-    public List<ProjectCardResponse> getAllByParticipant(Long userId) {
-        return userService.findById(userId)
-                .getProjects()
-                .stream()
-                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())))
-                .toList();
+    public PageResponse<ProjectCardResponse> getAllByParticipant(Long userId, final int pageNumber, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = projectRepository.findAllByParticipants_Id(userId, pageable)
+                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())));
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
-    public List<ProjectCardResponse> getAllSaved(Long userId) {
-        return userService.findById(userId)
-                .getSavedProjects()
-                .stream()
-                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())))
-                .toList();
+    public PageResponse<ProjectCardResponse> getAllSaved(Long userId, final int pageNumber, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = projectRepository.findAllBySavedByUsers_Id(userId, pageable)
+                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())));
+
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
     @Transactional
@@ -211,13 +232,21 @@ public class ProjectService {
         findById(projectId).setStatus(ProjectStatus.REJECTED);
     }
 
-    public List<ProjectCardResponse> getAllPending(Long userId) {
+    public PageResponse<ProjectCardResponse> getAllPending(Long userId, final int pageNumber, final int pageSize) {
         //user is admin?
         userService.checkIfExists(userId);
-        return projectRepository
-                .findAllByStatus(ProjectStatus.PENDING)
-                .stream()
-                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())))
-                .toList();
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = projectRepository
+                .findAllByStatus(ProjectStatus.PENDING, pageable)
+                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())));
+
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 }

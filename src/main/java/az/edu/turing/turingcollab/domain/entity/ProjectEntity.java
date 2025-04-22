@@ -83,6 +83,10 @@ public class ProjectEntity extends BaseEntity {
     @Builder.Default
     private Set<UserEntity> participants = new HashSet<>();
 
+    @ManyToMany(mappedBy = "savedProjects", fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<UserEntity> savedByUsers = new HashSet<>();
+
     public void addParticipant(UserEntity user) {
         participants.add(user);
         user.getProjects().add(this);
