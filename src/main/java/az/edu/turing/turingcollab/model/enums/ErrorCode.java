@@ -14,7 +14,8 @@ public enum ErrorCode {
     PROJECT_ALREADY_EXISTS(HttpStatus.CONFLICT),
     APP_NOT_FOUND(HttpStatus.NOT_FOUND),
     BAD_REQUEST(HttpStatus.BAD_REQUEST),
-    ALREADY_EXISTS(HttpStatus.BAD_REQUEST);
+    ALREADY_EXISTS(HttpStatus.BAD_REQUEST),
+    FORBIDDEN(HttpStatus.FORBIDDEN);
 
     private final HttpStatus httpStatus;
 

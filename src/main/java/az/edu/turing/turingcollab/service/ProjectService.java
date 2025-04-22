@@ -114,7 +114,7 @@ public class ProjectService {
 
         return projectRepository.getAllByCreatedBy(userId)
                 .stream()
-                .map(projectMapper::toCardResponse)
+                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())))
                 .toList();
     }
 
@@ -171,7 +171,7 @@ public class ProjectService {
         return userService.findById(userId)
                 .getProjects()
                 .stream()
-                .map(projectMapper::toCardResponse)
+                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())))
                 .toList();
     }
 
@@ -179,7 +179,7 @@ public class ProjectService {
         return userService.findById(userId)
                 .getSavedProjects()
                 .stream()
-                .map(projectMapper::toCardResponse)
+                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())))
                 .toList();
     }
 
@@ -217,7 +217,7 @@ public class ProjectService {
         return projectRepository
                 .findAllByStatus(ProjectStatus.PENDING)
                 .stream()
-                .map(projectMapper::toCardResponse)
+                .map(p -> projectMapper.toCardResponse(p, userService.findById(p.getCreatedBy())))
                 .toList();
     }
 }

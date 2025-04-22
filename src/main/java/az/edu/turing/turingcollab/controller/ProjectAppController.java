@@ -41,14 +41,17 @@ public class ProjectAppController {
 
     @PatchMapping("/approve/{id}")
     public ResponseEntity<Void> approve(
+            @RequestHeader("User-Id") Long userId,
             @PathVariable Long id) {
-        projectAppService.approve(id);
+        projectAppService.approve(userId, id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/reject/{id}")
-    public ResponseEntity<Void> reject(@PathVariable Long id) {
-        projectAppService.reject(id);
+    public ResponseEntity<Void> reject(
+            @RequestHeader("User-Id") Long userId,
+            @PathVariable Long id) {
+        projectAppService.reject(userId, id);
         return ResponseEntity.noContent().build();
     }
 
