@@ -1,8 +1,10 @@
 package az.edu.turing.turingcollab.controller;
 
 import az.edu.turing.turingcollab.model.dto.response.IncomingAppResponse;
+import az.edu.turing.turingcollab.model.dto.response.PageResponse;
 import az.edu.turing.turingcollab.model.dto.response.SentAppResponse;
 import az.edu.turing.turingcollab.service.ProjectAppService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static az.edu.turing.turingcollab.model.constant.PageConstants.DEFAULT_PAGE_NUMBER;
+import static az.edu.turing.turingcollab.model.constant.PageConstants.DEFAULT_PAGE_SIZE;
 
 @Validated
 @RestController
@@ -26,17 +32,21 @@ public class ProjectAppController {
     private final ProjectAppService projectAppService;
 
     @GetMapping("/incoming")
-    public ResponseEntity<List<IncomingAppResponse>> getIncomingApps(
-            @RequestHeader("User-Id") Long userId
+    public ResponseEntity<PageResponse<IncomingAppResponse>> getIncomingApps(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize
     ) {
-        return ResponseEntity.ok(projectAppService.getIncoming(userId));
+        return ResponseEntity.ok(projectAppService.getIncoming(userId, pageNumber, pageSize));
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<List<SentAppResponse>> getSent(
-            @RequestHeader("User-Id") Long userId
+    public ResponseEntity<PageResponse<SentAppResponse>> getSent(
+            @RequestHeader("User-Id") Long userId,
+            @RequestParam(defaultValue = DEFAULT_PAGE_NUMBER, required = false) @Min(0) int pageNumber,
+            @RequestParam(defaultValue = DEFAULT_PAGE_SIZE, required = false) @Min(1) int pageSize
     ) {
-        return ResponseEntity.ok(projectAppService.getSent(userId));
+        return ResponseEntity.ok(projectAppService.getSent(userId, pageNumber, pageSize));
     }
 
     @PatchMapping("/approve/{id}")
