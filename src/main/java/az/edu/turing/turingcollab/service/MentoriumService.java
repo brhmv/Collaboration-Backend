@@ -188,4 +188,12 @@ public class MentoriumService {
     public MentoriumEntity findById(Long mentoriumId) {
         return mentoriumRepository.findById(mentoriumId).orElseThrow(() -> new MentoriumNotFoundException(mentoriumId));
     }
+
+    public void accept(Long userId, Long mentoriumId) {
+        findById(mentoriumId).setStatus(MentoriumStatus.ACCEPTED);
+    }
+
+    public void reject(Long userId, Long mentoriumId) {
+        findById(mentoriumId).setStatus(MentoriumStatus.REJECTED);
+    }
 }
