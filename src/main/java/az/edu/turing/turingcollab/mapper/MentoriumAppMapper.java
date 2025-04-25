@@ -19,9 +19,12 @@ public interface MentoriumAppMapper {
 
     @Mapping(source = "entity.id", target = "id")
     @Mapping(target = "createdAt", expression = "java(formatInstant(entity.getCreatedAt()))")
+    @Mapping(source = "entity.mentorium.topic", target = "topic")
+    @Mapping(source = "creator", target = "participant")
     IncomingAppResponse toIncomingAppResponse(MentoriumApplicationEntity entity, UserEntity creator);
 
     @Mapping(target = "createdAt", expression = "java(formatInstant(entity.getCreatedAt()))")
+    @Mapping(source = "entity.mentorium.topic", target = "topic")
     SentAppResponse toSentAppResponse(MentoriumApplicationEntity entity);
 
     default String formatInstant(Instant instant) {

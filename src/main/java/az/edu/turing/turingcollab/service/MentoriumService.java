@@ -11,16 +11,18 @@ import az.edu.turing.turingcollab.mapper.MentoriumMapper;
 import az.edu.turing.turingcollab.model.dto.request.MentoriumCreateRequest;
 import az.edu.turing.turingcollab.model.dto.request.MentoriumUpdateRequest;
 import az.edu.turing.turingcollab.model.dto.response.MentoriumCardResponse;
+import az.edu.turing.turingcollab.model.dto.response.PageResponse;
 import az.edu.turing.turingcollab.model.enums.ErrorCode;
 import az.edu.turing.turingcollab.model.enums.MentoriumStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,10 +51,17 @@ public class MentoriumService {
         return savedMentorium.getId();
     }
 
-    public List<MentoriumCardResponse> getAllMentoriums() {
-        return mentoriumRepository.getAllByStatusIs(MentoriumStatus.ACCEPTED).stream().
-                map(m -> mentoriumMapper.toCardResponse(m,
-                        userService.findById(m.getCreatedBy()))).toList();
+    public PageResponse<MentoriumCardResponse> getAllMentoriums(final int pageNumber, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = mentoriumRepository.findAllByStatusIs(MentoriumStatus.ACCEPTED, pageable)
+                .map(m -> mentoriumMapper.toCardResponse(m, userService.findById(m.getCreatedBy())));
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
     public MentoriumCardResponse getMentoriumById(Long id) {
@@ -60,29 +69,62 @@ public class MentoriumService {
                 new MentoriumNotFoundException(id)));
     }
 
-    public List<MentoriumCardResponse> getAllByCreator(Long userId) {
-        return mentoriumRepository.findAllByCreatedBy(userId)
-                .stream()
-                .map(mentoriumMapper::toCardResponse)
-                .toList();
+    public PageResponse<MentoriumCardResponse> getAllByCreator(Long userId, final int pageNumber, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = mentoriumRepository.findAllByCreatedBy(userId, pageable)
+                .map(m -> mentoriumMapper.toCardResponse(m, userService.findById(m.getCreatedBy())));
+
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
-    public List<MentoriumCardResponse> getAllByParticipant(Long userId) {
-        return userService.findById(userId)
-                .getMentoriums()
-                .stream()
-                .map(mentoriumMapper::toCardResponse)
-                .toList();
+    public PageResponse<MentoriumCardResponse> getAllByParticipant(Long userId, final int pageNumber, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = mentoriumRepository.findAllByParticipants_Id(userId, pageable)
+                .map(m -> mentoriumMapper.toCardResponse(m, userService.findById(m.getCreatedBy())));
+
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
-    public List<MentoriumCardResponse> getAllSaved(Long userId) {
-        return userService.findById(userId)
-                .getMentoriums()
-                .stream()
-                .map(mentoriumMapper::toCardResponse)
-                .toList();
+    public PageResponse<MentoriumCardResponse> getAllSaved(Long userId, final int pageNumber, final int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = mentoriumRepository.findAllBySavedByUsers_Id(userId, pageable)
+                .map(m -> mentoriumMapper.toCardResponse(m, userService.findById(m.getCreatedBy())));
+
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
     }
 
+    public PageResponse<MentoriumCardResponse> getAllPending(Long userId, int pageNumber, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        var responses = mentoriumRepository
+                .findAllByStatus(MentoriumStatus.PENDING, pageable)
+                .map(m -> mentoriumMapper.toCardResponse(m, userService.findById(m.getCreatedBy())));
+
+        return PageResponse.of(
+                responses.getContent(),
+                pageNumber,
+                pageSize,
+                responses.getTotalElements(),
+                responses.getTotalPages());
+    }
 
     @Transactional
     public Long update(Long userId, Long mentoriumId, MentoriumUpdateRequest request) {
@@ -145,5 +187,17 @@ public class MentoriumService {
 
     public MentoriumEntity findById(Long mentoriumId) {
         return mentoriumRepository.findById(mentoriumId).orElseThrow(() -> new MentoriumNotFoundException(mentoriumId));
+    }
+
+    @Transactional
+    public void accept(Long userId, Long mentoriumId) {
+        //TODO: Check if user is admin
+        findById(mentoriumId).setStatus(MentoriumStatus.ACCEPTED);
+    }
+
+    @Transactional
+    public void reject(Long userId, Long mentoriumId) {
+        //TODO: Check if user is admin
+        findById(mentoriumId).setStatus(MentoriumStatus.REJECTED);
     }
 }
