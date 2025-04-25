@@ -1,0 +1,27 @@
+services:
+  db_turing_collab:
+    container_name: turing-collab_db
+    image: postgres
+    ports:
+      - "5438:5432"
+    environment:
+      POSTGRES_DB: turing-collab
+      POSTGRES_USER: turing-collab
+      POSTGRES_PASSWORD: turing-collab123
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "turing-collab"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+
+  turing-collab:
+    container_name: turing_collab_app
+    image: turing-collab:0.0.1
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    build:
+      dockerfile: Dockerfile
+    depends_on:
+      db_turing_collab:
+        condition: service_healthy
