@@ -189,11 +189,15 @@ public class MentoriumService {
         return mentoriumRepository.findById(mentoriumId).orElseThrow(() -> new MentoriumNotFoundException(mentoriumId));
     }
 
+    @Transactional
     public void accept(Long userId, Long mentoriumId) {
+        //TODO: Check if user is admin
         findById(mentoriumId).setStatus(MentoriumStatus.ACCEPTED);
     }
 
+    @Transactional
     public void reject(Long userId, Long mentoriumId) {
+        //TODO: Check if user is admin
         findById(mentoriumId).setStatus(MentoriumStatus.REJECTED);
     }
 }

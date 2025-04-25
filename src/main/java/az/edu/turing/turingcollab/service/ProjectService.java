@@ -227,13 +227,13 @@ public class ProjectService {
 
     @Transactional
     public void reject(Long userId, Long projectId) {
-        // Check user is admin?
+        //TODO: Check if user is admin
         userService.checkIfExists(userId);
         findById(projectId).setStatus(ProjectStatus.REJECTED);
     }
 
     public PageResponse<ProjectCardResponse> getAllPending(Long userId, final int pageNumber, final int pageSize) {
-        //user is admin?
+        //TODO: Check if user is admin
         userService.checkIfExists(userId);
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
