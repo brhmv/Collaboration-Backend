@@ -13,6 +13,6 @@ spring:
   liquibase:
     change-log: classpath:liquibase/changelog-master.yml
   datasource:
-    url: jdbc:postgresql://localhost:5438/postgres
-    username: postgres
-    password: 1234
+    url: jdbc:postgresql://db_turing_collab:5432/turing-collab
+    username: turing-collab
+    password: turing-collab123
